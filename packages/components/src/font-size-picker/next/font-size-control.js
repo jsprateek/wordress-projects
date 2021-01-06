@@ -35,6 +35,8 @@ function FontSizeControl( props, forwardedRef ) {
 
 	const label = __( 'Font size' );
 	const customLabel = __( 'Custom' );
+	const max = 100;
+	const min = 1;
 
 	return (
 		<View as="fieldset" { ...otherProps }>
@@ -45,6 +47,8 @@ function FontSizeControl( props, forwardedRef ) {
 					inputValue={ inputValue }
 					isDefaultValue={ isDefaultValue }
 					label={ label }
+					max={ max }
+					min={ min }
 					onChange={ onChange }
 					onInputChange={ onInputChange }
 					onReset={ onReset }
@@ -56,8 +60,8 @@ function FontSizeControl( props, forwardedRef ) {
 					withSelect={ withSelect }
 				/>
 				<FontSizeControlSlider
-					max={ 100 }
-					min={ 1 }
+					max={ max }
+					min={ min }
 					onChange={ onInputChange }
 					size={ size }
 					value={ inputValue }
