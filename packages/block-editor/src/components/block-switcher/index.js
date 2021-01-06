@@ -16,7 +16,6 @@ import {
 import { switchToBlockType, store as blocksStore } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { stack } from '@wordpress/icons';
-import { useViewportMatch } from '@wordpress/compose';
 
 /**
  * Internal dependencies
@@ -68,8 +67,6 @@ const BlockSwitcher = ( { clientIds } ) => {
 		[ clientIds ]
 	);
 
-	const isSmallScreen = useViewportMatch( 'small', '<' );
-
 	if ( ! blocks?.length ) return null;
 
 	const onTransform = ( name ) =>
@@ -89,18 +86,14 @@ const BlockSwitcher = ( { clientIds } ) => {
 		);
 	}
 
-	const singleBlockLabel = isSmallScreen
-		? blockTitle
-		: `${ __( 'Change block type or style' ) } ( ${ blockTitle } )`;
-
 	const blockSwitcherLabel =
 		1 === blocks.length
-			? singleBlockLabel
+			? __( 'Transform block' )
 			: sprintf(
 					/* translators: %s: number of blocks. */
 					_n(
-						'Change type of %d block',
-						'Change type of %d blocks',
+						'Transform %d block',
+						'Transform %d blocks',
 						blocks.length
 					),
 					blocks.length
