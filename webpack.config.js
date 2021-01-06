@@ -64,6 +64,40 @@ const stylesTransform = ( content ) => {
 	return content;
 };
 
+const nodeModulesToTranspile = [
+	// general form is <package-name>/.
+	// The trailing slash makes sure we're not matching these as prefixes
+	'zustand/',
+];
+
+/**
+ * Check to see if we should transpile certain files in node_modules
+ *
+ * @param {string} filepath the path of the file to check
+ * @return {boolean} True if we should transpile it, false if not
+ *
+ * We had a thought to try to find the package.json and use the engines property
+ * to determine what we should transpile, but not all libraries set engines properly
+ * (see d3-array@2.0.0). Instead, we transpile libraries we know to have dropped Node 4 support
+ * are likely to remain so going forward.
+ */
+function shouldTranspileDependency( filepath ) {
+	// find the last index of node_modules and check from there
+	// we want <working>/node_modules/a-package/node_modules/foo/index.js to only match foo, not a-package
+	const marker = '/node_modules/';
+	const lastIndex = filepath.lastIndexOf( marker );
+	if ( lastIndex === -1 ) {
+		// we're not in node_modules
+		return false;
+	}
+
+	const checkFrom = lastIndex + marker.length;
+
+	return nodeModulesToTranspile.some( ( modulePart ) =>
+		filepath.startsWith( modulePart, checkFrom )
+	);
+}
+
 module.exports = {
 	optimization: {
 		// Only concatenate modules in production, when not analyzing bundles.
@@ -101,6 +135,23 @@ module.exports = {
 	},
 	module: {
 		rules: compact( [
+			{
+				test: /\.js$/,
+				include: shouldTranspileDependency,
+				use: [
+					require.resolve( 'thread-loader' ),
+					{
+						loader: require.resolve( 'babel-loader' ),
+						options: {
+							// Babel uses a directory within local node_modules
+							// by default. Use the environment variable option
+							// to enable more persistent caching.
+							cacheDirectory:
+								process.env.BABEL_CACHE_DIRECTORY || true,
+						},
+					},
+				],
+			},
 			mode !== 'production' && {
 				test: /\.js$/,
 				use: require.resolve( 'source-map-loader' ),
