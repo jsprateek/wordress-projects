@@ -1,5 +1,3 @@
-<!-- Learn how to maintain this file at https://github.com/WordPress/gutenberg/tree/master/packages#maintaining-changelogs. -->
-
 <!--
 For each user feature we should also add a importance categorization label  to indicate the relevance of the change for end users of GB Mobile. The format is the following:
 [***] → Major new features, significant updates to core flows, or impactful fixes (e.g. a crash that impacts a lot of users) — things our users should be aware of.
@@ -9,7 +7,7 @@ For each user feature we should also add a importance categorization label  to i
 [*] → Minor enhancements and fixes that address annoyances — things our users can miss.
 -->
 
-## Unreleased
+## To be released
 
 ## 1.44.0
 
